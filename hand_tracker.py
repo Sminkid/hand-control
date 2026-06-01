@@ -24,3 +24,34 @@ class HandTracker:
             hand = result.hand_landmarks[0]
             return [(lm.x, lm.y, lm.z) for lm in hand]
         return None
+
+    def draw_skeleton(self, frame, landmarks):
+        """Draw all 21 landmarks and connections onto the frame."""
+        if landmarks is None:
+            return
+
+        h, w, _ = frame.shape
+
+        # Convert normalised coords to pixel positions
+        points = [(int(lm[0] * w), int(lm[1] * h)) for lm in landmarks]
+
+        # Finger connections — each tuple is (start_landmark, end_landmark)
+        connections = [
+            (0,1),(1,2),(2,3),(3,4),         # thumb
+            (0,5),(5,6),(6,7),(7,8),          # index
+            (0,9),(9,10),(10,11),(11,12),     # middle
+            (0,13),(13,14),(14,15),(15,16),   # ring
+            (0,17),(17,18),(18,19),(19,20),   # pinky
+            (5,9),(9,13),(13,17),             # palm
+        ]
+
+        # Draw connections
+        for start, end in connections:
+            cv2.line(frame, points[start], points[end], (0, 200, 150), 2)
+
+        # Draw each landmark dot and its number
+        for i, (x, y) in enumerate(points):
+            cv2.circle(frame, (x, y), 6, (255, 255, 255), -1)  # white dot
+            cv2.circle(frame, (x, y), 6, (0, 150, 100), 2)     # green ring
+            cv2.putText(frame, str(i), (x + 8, y - 8),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 255), 1)

@@ -1,7 +1,7 @@
 import cv2
 from hand_tracker import HandTracker
 from gesture_engine import GestureEngine
-from mac_actions import execute
+from mac_actions import execute, move_cursor
 from config import CAMERA_INDEX, FLIP_FRAME, SHOW_DEBUG
 
 def main():
@@ -22,11 +22,13 @@ def main():
 
         landmarks = tracker.get_landmarks(frame)
         gesture = engine.update(landmarks)
+        move_cursor(landmarks)
 
         if gesture:
             execute(gesture)
 
         if SHOW_DEBUG:
+            tracker.draw_skeleton(frame, landmarks)
             label = gesture if gesture else "watching..."
             cv2.putText(frame, label, (30, 50),
                         cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
