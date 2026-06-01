@@ -1,7 +1,7 @@
 import cv2
 from hand_tracker import HandTracker
 from gesture_engine import GestureEngine
-from mac_actions import execute, move_cursor
+from mac_actions import execute, move_cursor, check_pinch
 from config import CAMERA_INDEX, FLIP_FRAME, SHOW_DEBUG
 
 def main():
@@ -23,6 +23,7 @@ def main():
         landmarks = tracker.get_landmarks(frame)
         gesture = engine.update(landmarks)
         move_cursor(landmarks)
+        check_pinch(landmarks)
 
         if gesture:
             execute(gesture)
