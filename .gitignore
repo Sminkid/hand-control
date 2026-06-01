@@ -14,4 +14,4 @@ __pycache__/
 .idea/
 
 # Environment variables (if you add any later)
-.env
+.env*.task
