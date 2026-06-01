@@ -29,6 +29,7 @@ def main():
 
         if SHOW_DEBUG:
             tracker.draw_skeleton(frame, landmarks)
+            tracker.draw_active_zone(frame)
             label = gesture if gesture else "watching..."
             cv2.putText(frame, label, (30, 50),
                         cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)

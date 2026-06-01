@@ -55,3 +55,22 @@ class HandTracker:
             cv2.circle(frame, (x, y), 6, (0, 150, 100), 2)     # green ring
             cv2.putText(frame, str(i), (x + 8, y - 8),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 255), 1)
+            
+    def draw_active_zone(self, frame):
+        """Draw the active zone boundary on the webcam feed."""
+        from mac_actions import X_MIN, X_MAX, Y_MIN, Y_MAX
+
+        h, w, _ = frame.shape
+
+        # Convert normalised zone coords to pixel coords
+        x1 = int(X_MIN * w)
+        x2 = int(X_MAX * w)
+        y1 = int(Y_MIN * h)
+        y2 = int(Y_MAX * h)
+
+        # Draw the rectangle
+        cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 255), 2)
+
+        # Label it
+        cv2.putText(frame, "active zone", (x1 + 8, y1 + 24),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 255), 1)
