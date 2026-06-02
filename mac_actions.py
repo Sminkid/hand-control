@@ -9,13 +9,13 @@ SCREEN_W, SCREEN_H = pyautogui.size()
 X_MIN, X_MAX = 0.1, 0.9
 Y_MIN, Y_MAX = 0.1, 0.9
 
-PINCH_THRESHOLD = 0.05
+PINCH_THRESHOLD = 0.07
 
 ACTIONS = {
-    "swipe_left":  lambda: pyautogui.hotkey("ctrl", "right"),
-    "swipe_right": lambda: pyautogui.hotkey("ctrl", "left"),
-    "swipe_up":    lambda: pyautogui.hotkey("ctrl", "up"),
-    "swipe_down":  lambda: pyautogui.hotkey("ctrl", "down"),
+    "swipe_left":  lambda: pyautogui.hotkey("ctrl", "right"),  # next Space
+    "swipe_right": lambda: pyautogui.hotkey("ctrl", "left"),   # prev Space
+    "swipe_up":    lambda: pyautogui.scroll(5),                # scroll up
+    "swipe_down":  lambda: pyautogui.scroll(-5),               # scroll down
 }
 
 # Track pinch state
@@ -45,7 +45,7 @@ def move_cursor(landmarks):
     pyautogui.moveTo(screen_x, screen_y)
 
 def check_pinch(landmarks):
-    """Hold mouse button down while pinching, release when open."""
+    """Hold mouse button down while thumb and index fingertips are pinched."""
     global is_pinching
 
     if landmarks is None:
@@ -54,8 +54,8 @@ def check_pinch(landmarks):
             is_pinching = False
         return
 
-    thumb = landmarks[4]
-    index = landmarks[8]
+    thumb = landmarks[4]   # thumb tip
+    index = landmarks[8]   # index tip
 
     dist = ((thumb[0] - index[0])**2 + (thumb[1] - index[1])**2) ** 0.5
 
