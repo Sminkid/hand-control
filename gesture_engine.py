@@ -2,17 +2,22 @@ import time
 from collections import deque
 from config import HISTORY_LENGTH, SWIPE_SPEED_THRESHOLD, GESTURE_COOLDOWN
 
-# Landmark index constants — named so the code reads like english
 WRIST       = 0
 THUMB_TIP   = 4
 INDEX_TIP   = 8
 MIDDLE_TIP  = 12
-INDEX_MCP   = 5  # index knuckle
+INDEX_MCP   = 5
+
+opposites = {
+    "swipe_left": "swipe_right",
+    "swipe_right": "swipe_left"
+}
 
 class GestureEngine:
     def __init__(self):
         self.history = deque(maxlen=HISTORY_LENGTH)
         self.last_gesture_time = 0
+        self.last_gesture_direction = None
 
     def update(self, landmarks):
         """Call every frame. Returns a gesture string or None."""
@@ -24,13 +29,13 @@ class GestureEngine:
         middle_y = landmarks[MIDDLE_TIP][1]
         self.history.append((middle_x, middle_y, time.time()))
 
-        # Still in cooldown from last gesture
         if time.time() - self.last_gesture_time < GESTURE_COOLDOWN:
             return None
 
         gesture = self._classify()
         if gesture:
             self.last_gesture_time = time.time()
+            self.last_gesture_direction = gesture
             self.history.clear()
 
         return gesture
@@ -51,8 +56,7 @@ class GestureEngine:
         if speed < SWIPE_SPEED_THRESHOLD:
             return None
 
-        # Only detect horizontal swipes
-        if abs(dx) > 0.1:
+        if abs(dx) > 0.15:
             return "swipe_right" if dx > 0 else "swipe_left"
 
         return None

@@ -11,5 +11,5 @@ DETECTION_CONFIDENCE = 0.7
 # Gesture engine
 HISTORY_LENGTH = 20       # how many frames to track
 SWIPE_SPEED_THRESHOLD = 0.4   # minimum speed to count as a swipe
-GESTURE_COOLDOWN = 0.8    # seconds before next gesture fires
+GESTURE_COOLDOWN = 1.5   # seconds before next gesture fires
 
